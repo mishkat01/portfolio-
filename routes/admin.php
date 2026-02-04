@@ -29,5 +29,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
              Route::get('settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
              Route::post('settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
         });
+
+        // Portfolio Management Routes
+        Route::prefix('portfolio')->name('portfolio.')->group(function () {
+            Route::get('profile', [App\Http\Controllers\Admin\Portfolio\ProfileController::class, 'edit'])->name('profile.edit');
+            Route::put('profile', [App\Http\Controllers\Admin\Portfolio\ProfileController::class, 'update'])->name('profile.update');
+            
+            Route::resource('projects', App\Http\Controllers\Admin\Portfolio\ProjectController::class);
+            Route::resource('skills', App\Http\Controllers\Admin\Portfolio\SkillController::class);
+        });
     });
 });

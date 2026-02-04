@@ -3,8 +3,13 @@
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
+// Public Routes
 Route::get('/', function () {
-    return view('welcome');
+    $profile = App\Models\PortfolioProfile::first();
+    $projects = App\Models\Project::orderBy('sort_order')->get();
+    $skills = App\Models\Skill::all();
+    
+    return view('portfolio.3d_index', compact('profile', 'projects', 'skills'));
 });
 
 // Guest User Routes
