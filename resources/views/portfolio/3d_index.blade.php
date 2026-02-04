@@ -103,7 +103,32 @@
                     </div>
                 </div>
             </div>
-            
+            <!-- About Section (Appears when camera is at the end) -->
+            <div id="about-section" class="absolute inset-0 flex items-center justify-center p-8 transition-opacity duration-1000 opacity-0 pointer-events-none z-0 interactive-ui">
+                <div class="max-w-2xl bg-black/60 backdrop-blur-md p-8 rounded-2xl border border-white/10 text-center">
+                    <img src="{{ $profile->hero_title === 'Welcome' ? 'https://ui-avatars.com/api/?name=Admin&background=random' : ($profile->social_links['avatar'] ?? 'https://ui-avatars.com/api/?name=Me&background=random') }}" 
+                         class="w-24 h-24 rounded-full mx-auto mb-6 border-4 border-cyan-500 shadow-lg shadow-cyan-500/50">
+                    
+                    <h2 class="text-3xl font-bold mb-2">{{ $profile->hero_title }}</h2>
+                    <h3 class="text-xl text-cyan-400 mb-6">{{ $profile->subtitle }}</h3>
+                    
+                    <p class="text-gray-300 leading-relaxed mb-8">
+                        {{ $profile->about_text ?? "Welcome to my 3D universe. Use the admin panel to update this bio!" }}
+                    </p>
+
+                    <div class="flex justify-center space-x-6">
+                        @if($profile->resume_url)
+                            <a href="{{ $profile->resume_url }}" target="_blank" class="text-white hover:text-cyan-400 border-b border-cyan-400 pb-1">Resume</a>
+                        @endif
+                        @if(isset($profile->social_links['github']))
+                            <a href="{{ $profile->social_links['github'] }}" target="_blank" class="text-white hover:text-cyan-400 border-b border-cyan-400 pb-1">GitHub</a>
+                        @endif
+                        @if(isset($profile->social_links['linkedin']))
+                            <a href="{{ $profile->social_links['linkedin'] }}" target="_blank" class="text-white hover:text-cyan-400 border-b border-cyan-400 pb-1">LinkedIn</a>
+                        @endif
+                    </div>
+                </div>
+            </div>
             <!-- Instructions -->
             <div class="absolute bottom-8 left-8 text-xs text-gray-500 interactive-ui">
                 <p>Scroll to Explore • Click to Interact</p>

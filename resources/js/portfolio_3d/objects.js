@@ -65,5 +65,57 @@ export function createProjectObject(project, index) {
         project: project 
     };
 
+    // ... existing code ...
+
     return mesh;
+}
+
+export function createSkillObject(skill, index) {
+    // Create label using Canvas
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 256;
+    canvas.height = 128; // Rectangular for text
+
+    // Background
+    ctx.fillStyle = skill.color || '#ffffff';
+    ctx.globalAlpha = 0.2;
+    ctx.roundRect(0, 0, 256, 128, 20);
+    ctx.fill();
+    
+    // Border
+    ctx.globalAlpha = 1.0;
+    ctx.strokeStyle = skill.color || '#ffffff';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    // Text
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 32px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(skill.name, 128, 48);
+    
+    // Proficiency Bar
+    const profWidth = (skill.proficiency / 100) * 200;
+    ctx.fillStyle = '#444444';
+    ctx.fillRect(28, 90, 200, 10); // track
+    ctx.fillStyle = skill.color || '#ffffff';
+    ctx.fillRect(28, 90, profWidth, 10); // value
+
+    const texture = new THREE.CanvasTexture(canvas);
+    const material = new THREE.SpriteMaterial({ map: texture });
+    const sprite = new THREE.Sprite(material);
+    
+    sprite.scale.set(3, 1.5, 1);
+
+    // Arrange in a cloud/grid around Z = -25
+    const row = Math.floor(index / 3);
+    const col = index % 3;
+    
+    sprite.position.x = (col - 1) * 4;
+    sprite.position.y = (Math.random() - 0.5) * 4; // Randomize height slightly
+    sprite.position.z = -25 - (row * 3); // Start at -25
+
+    return sprite;
 }

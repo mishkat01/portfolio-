@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { initScene } from './scene';
-import { createProjectObject } from './objects';
+import { createProjectObject, createSkillObject } from './objects';
 
 // 1. Setup
 const { scene, camera, renderer, starField } = initScene();
@@ -14,6 +14,15 @@ projects.forEach((proj, index) => {
     const mesh = createProjectObject(proj, index + 1);
     scene.add(mesh);
     projectMeshes.push(mesh);
+});
+
+// 2.5 Add Skills
+const skills = window.portfolioData.skills || [];
+const skillMeshes = [];
+skills.forEach((skill, index) => {
+    const sprite = createSkillObject(skill, index);
+    scene.add(sprite);
+    skillMeshes.push(sprite);
 });
 
 // 3. Interaction Logic
@@ -43,7 +52,7 @@ window.addEventListener('wheel', (e) => {
     targetCameraZ -= e.deltaY * 0.05;
     // Limit scroll
     const maxZ = 10;
-    const minZ = -(projects.length * 15) - 10;
+    const minZ = -50; // extended for skills/about
     targetCameraZ = Math.max(minZ, Math.min(maxZ, targetCameraZ));
 });
 
@@ -81,9 +90,6 @@ function openProjectModal(project) {
     setTimeout(() => {
         modal.classList.remove('translate-x-full');
     }, 10);
-    
-    // Stop responding to 3D clicks while modal is open? 
-    // Maybe just putting it on top (z-index) is enough since we use pointer-events
 }
 
 document.getElementById('close-modal').addEventListener('click', () => {
@@ -96,9 +102,12 @@ document.getElementById('close-modal').addEventListener('click', () => {
 
 // Camera Quick Nav
 window.cameraTo = (section) => {
-    if (section === 'projects') targetCameraZ = -15;
-    if (section === 'skills') targetCameraZ = -20; // Placeholder
-    // ...
+    const modal = document.getElementById('project-modal');
+    modal.classList.add('hidden'); // Close modal on nav
+    
+    if (section === 'projects') targetCameraZ = -5;
+    if (section === 'skills') targetCameraZ = -25;
+    if (section === 'about') targetCameraZ = -45;
 };
 
 // 4. Animation Loop
@@ -110,6 +119,9 @@ function animate() {
 
     // Rotate Stars
     starField.rotation.z += 0.0005;
+
+    // Check Camera Position for UI visibility
+    checkSectionVisibility();
 
     // Rotate Projects
     projectMeshes.forEach(mesh => {
@@ -131,3 +143,14 @@ setTimeout(() => {
     }, 1000);
 }, 500);
 
+function checkSectionVisibility() {
+    const aboutSection = document.getElementById('about-section');
+    if (!aboutSection) return;
+
+    // About section is at Z = -45. Show if close.
+    if (camera.position.z < -38) {
+        aboutSection.classList.remove('opacity-0', 'pointer-events-none');
+    } else {
+        aboutSection.classList.add('opacity-0', 'pointer-events-none');
+    }
+}
