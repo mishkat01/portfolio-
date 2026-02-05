@@ -58,21 +58,74 @@
 
         <div id="ui-layer" class="flex flex-col justify-between p-8">
             <!-- Header -->
-            <header class="flex justify-between items-center interactive-ui">
-                <div class="text-2xl font-bold tracking-widest uppercase">
+            <!-- Header -->
+            <header class="flex justify-between items-center interactive-ui relative z-50">
+                <div class="text-2xl font-bold tracking-widest uppercase text-white/90">
                     {{ $profile->hero_title ?? 'Portfolio' }}
                 </div>
-                <nav class="space-x-6 text-sm font-medium opacity-80">
-                    <a href="#" class="hover:text-cyan-400 transition" onclick="window.cameraTo('projects')">Works</a>
-                    <a href="#" class="hover:text-cyan-400 transition" onclick="window.cameraTo('skills')">Skills</a>
-                    <a href="#" class="hover:text-cyan-400 transition" onclick="window.cameraTo('about')">About</a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
+                    <a href="#" class="text-white/70 hover:text-cyan-400 transition-colors duration-300" onclick="window.cameraTo('projects'); return false;">WORKS</a>
+                    <a href="#" class="text-white/70 hover:text-cyan-400 transition-colors duration-300" onclick="window.cameraTo('skills'); return false;">SKILLS</a>
+                    <a href="#" class="text-white/70 hover:text-cyan-400 transition-colors duration-300" onclick="window.cameraTo('about'); return false;">ABOUT</a>
                     @auth
-                        <a href="{{ route('admin.dashboard') }}" class="text-indigo-400 hover:text-indigo-300">Admin</a>
+                        <a href="{{ route('admin.dashboard') }}" class="text-indigo-400 hover:text-indigo-300 transition-colors duration-300">ADMIN</a>
                     @else
-                        <a href="{{ route('login') }}" class="hover:text-white">Login</a>
+                        <a href="{{ route('login') }}" class="text-white/70 hover:text-cyan-400 transition-colors duration-300">LOGIN</a>
                     @endauth
                 </nav>
+
+                <!-- Mobile Hamburger Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+
+                <!-- Mobile Menu Overlay -->
+                <div id="mobile-menu" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-center items-center md:hidden">
+                    <button id="close-mobile-menu" class="mb-10 text-white/50 hover:text-cyan-400 transition-colors focus:outline-none group">
+                        <svg class="w-12 h-12 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                    
+                    <nav class="flex flex-col space-y-8 text-center text-2xl font-light tracking-widest">
+                        <a href="#" class="text-white hover:text-cyan-400 transition-colors" onclick="closeMobileMenu(); window.cameraTo('projects'); return false;">WORKS</a>
+                        <a href="#" class="text-white hover:text-cyan-400 transition-colors" onclick="closeMobileMenu(); window.cameraTo('skills'); return false;">SKILLS</a>
+                        <a href="#" class="text-white hover:text-cyan-400 transition-colors" onclick="closeMobileMenu(); window.cameraTo('about'); return false;">ABOUT</a>
+                        @auth
+                            <a href="{{ route('admin.dashboard') }}" class="text-indigo-400 hover:text-indigo-300 transition-colors">ADMIN</a>
+                        @else
+                            <a href="{{ route('login') }}" class="text-white hover:text-cyan-400 transition-colors">LOGIN</a>
+                        @endauth
+                    </nav>
+                </div>
             </header>
+
+            <script>
+                // Mobile Menu Logic
+                const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+                const mobileMenu = document.getElementById('mobile-menu');
+                const closeMobileMenuBtn = document.getElementById('close-mobile-menu');
+
+                function openMobileMenu() {
+                    mobileMenu.classList.remove('translate-x-full');
+                }
+
+                function closeMobileMenu() {
+                    mobileMenu.classList.add('translate-x-full');
+                }
+
+                if(mobileMenuBtn) {
+                    mobileMenuBtn.addEventListener('click', openMobileMenu);
+                }
+                
+                if(closeMobileMenuBtn) {
+                    closeMobileMenuBtn.addEventListener('click', closeMobileMenu);
+                }
+            </script>
 
             <!-- Loading Screen (Removed by JS) -->
             <div id="loading" class="absolute inset-0 flex items-center justify-center bg-black z-50 transition-opacity duration-1000 interactive-ui">
