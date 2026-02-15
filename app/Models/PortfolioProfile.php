@@ -12,6 +12,7 @@ class PortfolioProfile extends Model
     protected $fillable = [
         'hero_title',
         'subtitle',
+        'profile_image',
         'about_text',
         'resume_url',
         'social_links',

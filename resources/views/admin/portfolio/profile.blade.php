@@ -12,7 +12,7 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.portfolio.profile.update') }}" method="POST">
+        <form action="{{ route('admin.portfolio.profile.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -22,21 +22,59 @@
                 <div class="border-b border-gray-200 dark:border-gray-700 pb-4 mb-2">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Hero Section</h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="hero_title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hero Title</label>
-                            <input type="text" name="hero_title" id="hero_title" value="{{ old('hero_title', $profile->hero_title) }}" 
-                                class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                            @error('hero_title') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="hero_title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hero Title</label>
+                                <input type="text" name="hero_title" id="hero_title" value="{{ old('hero_title', $profile->hero_title) }}" 
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                @error('hero_title') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
+                                <label for="subtitle" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subtitle</label>
+                                <input type="text" name="subtitle" id="subtitle" value="{{ old('subtitle', $profile->subtitle) }}" 
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
                         </div>
 
                         <div>
-                            <label for="subtitle" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subtitle</label>
-                            <input type="text" name="subtitle" id="subtitle" value="{{ old('subtitle', $profile->subtitle) }}" 
-                                class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Profile Image</label>
+                            <div class="flex items-center space-x-4">
+                                <div class="shrink-0">
+                                    <img id="image_preview" class="h-24 w-24 object-cover rounded-full border-2 border-indigo-500 shadow-md" 
+                                         src="{{ $profile->profile_image ? asset('storage/' . $profile->profile_image) : 'https://ui-avatars.com/api/?name=' . urlencode($profile->hero_title) . '&background=6366f1&color=fff' }}" 
+                                         alt="Profile photo">
+                                </div>
+                                <label class="block">
+                                    <span class="sr-only">Choose profile photo</span>
+                                    <input type="file" name="profile_image" id="profile_image" onchange="previewImage(event)"
+                                           class="block w-full text-sm text-gray-500 dark:text-gray-400
+                                                  file:mr-4 file:py-2 file:px-4
+                                                  file:rounded-full file:border-0
+                                                  file:text-sm file:font-semibold
+                                                  file:bg-indigo-50 file:text-indigo-700
+                                                  hover:file:bg-indigo-100 dark:file:bg-gray-700 dark:file:text-indigo-400">
+                                </label>
+                            </div>
+                            @error('profile_image') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>
+
+                <script>
+                    function previewImage(event) {
+                        const input = event.target;
+                        const preview = document.getElementById('image_preview');
+                        if (input.files && input.files[0]) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                preview.src = e.target.result;
+                            }
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
 
                 {{-- About Section --}}
                 <div class="border-b border-gray-200 dark:border-gray-700 pb-4 mb-2">

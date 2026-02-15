@@ -23,6 +23,7 @@
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-20">Thumbnail</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Title</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">3D Type</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tech Stack</th>
@@ -32,6 +33,11 @@
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse($projects as $project)
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <img src="{{ $project->thumbnail_url ? (Str::startsWith($project->thumbnail_url, ['http://', 'https://']) ? $project->thumbnail_url : asset('storage/' . $project->thumbnail_url)) : 'https://via.placeholder.com/80x45?text=No+Img' }}" 
+                                 alt="{{ $project->title }}" 
+                                 class="h-10 w-16 object-cover rounded shadow-sm border border-gray-200 dark:border-gray-700">
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                             {{ $project->title }}
                         </td>
@@ -59,7 +65,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
+                        <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-center">
                             No projects found.
                         </td>
                     </tr>

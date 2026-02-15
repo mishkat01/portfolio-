@@ -29,32 +29,44 @@ skills.forEach((skill, index) => {
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-function onMouseClick(event) {
-    // Calculate mouse position in normalized device coordinates
+// 3. Interaction Logic
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let hoveredProject = null;
+
+function onMouseMove(event) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
 
+function onMouseClick() {
     raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(projectMeshes);
+    const intersects = raycaster.intersectObjects(projectMeshes, true);
 
     if (intersects.length > 0) {
-        const object = intersects[0].object;
-        if (object.userData.isProject) {
+        let object = intersects[0].object;
+        // Traverse up to find the group/mesh with userData
+        while (object && !object.userData.isProject) {
+            object = object.parent;
+        }
+
+        if (object && object.userData.isProject) {
             openProjectModal(object.userData.project);
         }
     }
 }
+
+window.addEventListener('mousemove', onMouseMove);
 window.addEventListener('click', onMouseClick);
 
 // Scroll Handling
 let scrollY = 0;
 window.addEventListener('wheel', (e) => {
-    targetCameraZ -= e.deltaY * 0.05;
-    // Limit scroll
-    const maxZ = 10;
-    const minZ = -50; // extended for skills/about
+    targetCameraZ -= e.deltaY * 0.03; // Slightly slower, more cinematic
+    const maxZ = 12;
+    const minZ = -55;
     targetCameraZ = Math.max(minZ, Math.min(maxZ, targetCameraZ));
-});
+}, { passive: true });
 
 // UI Functions
 function openProjectModal(project) {
@@ -67,72 +79,86 @@ function openProjectModal(project) {
     const github = document.getElementById('p-github');
 
     title.innerText = project.title;
-    desc.innerText = project.description || 'No description available.';
-    
-    if (project.tech_stack && Array.isArray(project.tech_stack)) {
-        tech.innerText = project.tech_stack.join(' • ');
-    } else {
-        tech.innerText = '';
-    }
+    desc.innerText = project.description || 'A unique digital masterpiece.';
+
+    tech.innerText = (project.tech_stack && Array.isArray(project.tech_stack))
+        ? project.tech_stack.join(' / ')
+        : 'CREATIVE TECH';
 
     if (project.thumbnail_url) {
-        img.src = project.thumbnail_url;
-        img.classList.remove('hidden');
+        const isFullUrl = project.thumbnail_url.startsWith('http');
+        img.src = isFullUrl ? project.thumbnail_url : `${window.portfolioData.assetPath}/${project.thumbnail_url}`;
+        img.style.display = 'block';
     } else {
-        img.classList.add('hidden');
+        img.style.display = 'none';
     }
 
     link.href = project.project_url || '#';
     github.href = project.github_url || '#';
 
-    modal.classList.remove('hidden');
-    // small delay to allow transition
-    setTimeout(() => {
-        modal.classList.remove('translate-x-full');
-    }, 10);
+    modal.classList.remove('translate-x-full');
 }
 
 document.getElementById('close-modal').addEventListener('click', () => {
-    const modal = document.getElementById('project-modal');
-    modal.classList.add('translate-x-full');
-    setTimeout(() => {
-        modal.classList.add('hidden');
-    }, 500);
+    document.getElementById('project-modal').classList.add('translate-x-full');
 });
 
 // Camera Quick Nav
 window.cameraTo = (section) => {
-    const modal = document.getElementById('project-modal');
-    modal.classList.add('hidden'); // Close modal on nav
-    
-    if (section === 'projects') targetCameraZ = -5;
-    if (section === 'skills') targetCameraZ = -25;
-    if (section === 'about') targetCameraZ = -45;
+    document.getElementById('project-modal').classList.add('translate-x-full');
+    if (section === 'projects') targetCameraZ = -10;
+    if (section === 'skills') targetCameraZ = -30;
+    if (section === 'about') targetCameraZ = -50;
 };
 
 // 4. Animation Loop
 function animate() {
     requestAnimationFrame(animate);
 
-    // Smooth Camera Movement
-    camera.position.z += (targetCameraZ - camera.position.z) * 0.05;
+    // Smooth Camera Movement (Lerp)
+    camera.position.z += (targetCameraZ - camera.position.z) * 0.08;
+    camera.position.x += (mouse.x * 2 - camera.position.x) * 0.05; // Subtle parallax
+    camera.position.y += (-mouse.y * 2 - camera.position.y) * 0.05;
+    camera.lookAt(0, 0, targetCameraZ - 20);
 
     // Rotate Stars
-    starField.rotation.z += 0.0005;
+    starField.rotation.z += 0.0003;
+    starField.rotation.y += 0.0001;
 
-    // Check Camera Position for UI visibility
+    // Hover detection
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(projectMeshes, true);
+
+    if (intersects.length > 0) {
+        let object = intersects[0].object;
+        while (object && !object.userData.isProject) object = object.parent;
+
+        if (object) {
+            if (hoveredProject !== object) {
+                if (hoveredProject) hoveredProject.scale.set(1, 1, 1);
+                hoveredProject = object;
+            }
+            object.scale.lerp(new THREE.Vector3(1.15, 1.15, 1.15), 0.1);
+            document.body.style.cursor = 'pointer';
+        }
+    } else {
+        if (hoveredProject) hoveredProject.scale.set(1, 1, 1);
+        hoveredProject = null;
+        document.body.style.cursor = 'default';
+    }
+
     checkSectionVisibility();
 
     // Rotate Projects
     projectMeshes.forEach(mesh => {
+        mesh.rotation.y += 0.01;
         mesh.rotation.x += 0.005;
-        mesh.rotation.y += 0.005;
     });
 
     renderer.render(scene, camera);
 }
 
-// Hide loading screen
+// Global Loading Logic
 document.getElementById('loading-bar').style.width = '100%';
 setTimeout(() => {
     const loading = document.getElementById('loading');
@@ -141,16 +167,17 @@ setTimeout(() => {
         loading.style.display = 'none';
         animate();
     }, 1000);
-}, 500);
+}, 1500);
 
 function checkSectionVisibility() {
     const aboutSection = document.getElementById('about-section');
     if (!aboutSection) return;
 
-    // About section is at Z = -45. Show if close.
-    if (camera.position.z < -38) {
+    if (camera.position.z < -42) {
         aboutSection.classList.remove('opacity-0', 'pointer-events-none');
+        aboutSection.querySelector('.max-w-xl').style.transform = 'scale(1)';
     } else {
         aboutSection.classList.add('opacity-0', 'pointer-events-none');
+        aboutSection.querySelector('.max-w-xl').style.transform = 'scale(0.95)';
     }
 }

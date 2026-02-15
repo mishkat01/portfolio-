@@ -6,7 +6,7 @@
 <div class="max-w-4xl mx-auto">
     <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
         
-        <form action="{{ route('admin.portfolio.projects.store') }}" method="POST">
+        <form action="{{ route('admin.portfolio.projects.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="grid grid-cols-1 gap-6">
@@ -39,8 +39,55 @@
                         class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description') }}</textarea>
                 </div>
 
+                {{-- Image / Thumbnail Section --}}
+                <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Project Thumbnail</label>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        <div>
+                            <div class="flex items-center space-x-4">
+                                <div class="shrink-0 bg-gray-100 dark:bg-gray-700 rounded-lg p-2">
+                                    <img id="image_preview" class="h-24 w-40 object-cover rounded shadow-sm" 
+                                         src="https://via.placeholder.com/400x225?text=Preview" 
+                                         alt="Thumbnail preview">
+                                </div>
+                                <label class="block">
+                                    <span class="sr-only">Choose thumbnail photo</span>
+                                    <input type="file" name="thumbnail_url" id="thumbnail_url" onchange="previewImage(event)"
+                                           class="block w-full text-sm text-gray-500 dark:text-gray-400
+                                                  file:mr-4 file:py-2 file:px-4
+                                                  file:rounded-full file:border-0
+                                                  file:text-sm file:font-semibold
+                                                  file:bg-indigo-50 file:text-indigo-700
+                                                  hover:file:bg-indigo-100 dark:file:bg-gray-700 dark:file:text-indigo-400">
+                                </label>
+                            </div>
+                            @error('thumbnail_url') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label for="thumbnail_url_manual" class="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Or Use External URL</label>
+                            <input type="text" name="thumbnail_url" id="thumbnail_url_manual" value="{{ old('thumbnail_url') }}" placeholder="https://..."
+                                class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                            <p class="text-xs text-gray-500 mt-1">If both are provided, the uploaded file takes precedence.</p>
+                        </div>
+                     </div>
+                </div>
+
+                <script>
+                    function previewImage(event) {
+                        const input = event.target;
+                        const preview = document.getElementById('image_preview');
+                        if (input.files && input.files[0]) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                preview.src = e.target.result;
+                            }
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
+
                 {{-- URLs --}}
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="project_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Live Demo URL</label>
                         <input type="url" name="project_url" id="project_url" value="{{ old('project_url') }}" 
@@ -49,11 +96,6 @@
                     <div>
                         <label for="github_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">GitHub URL</label>
                         <input type="url" name="github_url" id="github_url" value="{{ old('github_url') }}" 
-                            class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    </div>
-                     <div>
-                        <label for="thumbnail_url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Thumbnail URL</label>
-                        <input type="url" name="thumbnail_url" id="thumbnail_url" value="{{ old('thumbnail_url') }}" placeholder="https://..."
                             class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     </div>
                 </div>
