@@ -189,7 +189,17 @@ setTimeout(() => {
         opacity: 0, duration: 1, onComplete: () => {
             document.getElementById('loading').style.display = 'none';
             animate();
-            gsap.from('#hero-content', { opacity: 0, y: 100, duration: 2, ease: "power4.out" });
+
+            // Populate and Animate Stats
+            const projCount = window.portfolioData.projects.length;
+            const skillCount = window.portfolioData.skills.length;
+
+            document.getElementById('stat-projects').innerText = `${projCount}+`;
+            document.getElementById('stat-skills').innerText = `${skillCount}+`;
+
+            const tl = gsap.timeline();
+            tl.from('#hero-content', { opacity: 0, y: 100, duration: 2, ease: "power4.out" })
+                .to('#stats-bar', { opacity: 1, y: 0, duration: 1.5, ease: "power3.out" }, "-=1");
         }
     });
 }, 1500);

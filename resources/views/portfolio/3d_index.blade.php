@@ -149,6 +149,25 @@
                     <p class="text-lg md:text-xl text-white/40 max-w-2xl mx-auto font-light leading-relaxed mb-12">
                         {{ $profile->subtitle ?? "Building high-performance digital universes with modern tech." }}
                     </p>
+
+                    <!-- Statistics Bar -->
+                    <div id="stats-bar" class="flex flex-wrap items-center justify-center gap-8 md:gap-16 mb-16 opacity-0 translate-y-4 transition-all duration-1000 delay-500">
+                        <div class="text-center group">
+                            <div class="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors" id="stat-projects">0</div>
+                            <div class="text-[8px] font-bold tracking-[0.4em] text-white/30 uppercase">Projects Completed</div>
+                        </div>
+                        <div class="w-[1px] h-10 bg-white/10 hidden md:block"></div>
+                        <div class="text-center group">
+                            <div class="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors" id="stat-skills">0</div>
+                            <div class="text-[8px] font-bold tracking-[0.4em] text-white/30 uppercase">Tech Domains</div>
+                        </div>
+                        <div class="w-[1px] h-10 bg-white/10 hidden md:block"></div>
+                        <div class="text-center group">
+                            <div class="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors" id="stat-status">ACTIVE</div>
+                            <div class="text-[8px] font-bold tracking-[0.4em] text-white/30 uppercase">System Status</div>
+                        </div>
+                    </div>
+
                     <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-6">
                         <button onclick="window.cameraTo('projects')" class="w-full md:w-auto px-10 py-4 bg-white text-black text-sm font-black tracking-widest rounded-2xl hover:bg-purple-500 hover:text-white transition-all transform hover:-translate-y-2">
                             EXPLORE GALAXY
