@@ -109,27 +109,22 @@
         
         <div id="canvas-container"></div>
 
-        <div id="ui-layer" class="flex flex-col p-6 md:p-10">
+        <div id="ui-layer" class="flex flex-col min-h-screen">
             <!-- Header -->
-            <header class="flex justify-between items-center interactive-ui relative z-50 animate-fade-in translate-y-[-10px] opacity-0" style="animation: fadeIn 0.8s ease-out 0.5s forwards">
+            <header class="flex justify-between items-center interactive-ui p-6 md:p-10 relative z-50">
                 <div class="flex items-center space-x-4">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-                        <span class="text-xl font-bold text-white">M</span>
-                    </div>
-                    <div class="text-xl font-bold tracking-[0.2em] uppercase text-white/90">
-                        {{ $profile->hero_title ?? 'Portfolio' }}
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                        <span class="text-xl font-bold text-white">S</span>
                     </div>
                 </div>
 
                 <!-- Desktop Nav -->
-                <nav class="hidden md:flex space-x-10 text-xs font-bold tracking-widest">
-                    <a href="#" class="nav-link text-white/60 hover:text-white transition-colors duration-300" onclick="window.cameraTo('projects'); return false;">WORKS</a>
-                    <a href="#" class="nav-link text-white/60 hover:text-white transition-colors duration-300" onclick="window.cameraTo('skills'); return false;">SKILLS</a>
-                    <a href="#" class="nav-link text-white/60 hover:text-white transition-colors duration-300" onclick="window.cameraTo('about'); return false;">ABOUT</a>
+                <nav class="hidden md:flex space-x-10 text-[10px] font-bold tracking-[0.3em]">
+                    <a href="#" class="nav-link text-white/40 hover:text-white transition-colors duration-300" onclick="window.cameraTo('projects'); return false;">PROJECTS</a>
+                    <a href="#" class="nav-link text-white/40 hover:text-white transition-colors duration-300" onclick="window.cameraTo('skills'); return false;">SKILLS</a>
+                    <a href="#" class="nav-link text-white/40 hover:text-white transition-colors duration-300" onclick="window.cameraTo('about'); return false;">ABOUT</a>
                     @auth
-                        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 glass-panel rounded-full text-cyan-400 hover:text-white hover:bg-cyan-500/20 transition-all">ADMIN</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-white/40 hover:text-white transition-colors">LOGIN</a>
+                        <a href="{{ route('admin.dashboard') }}" class="px-5 py-2 glass-panel rounded-full text-purple-400 hover:text-white hover:bg-purple-500/20 transition-all">PANEL</a>
                     @endauth
                 </nav>
 
@@ -139,44 +134,34 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h16M10 16h10"></path>
                     </svg>
                 </button>
-
-                <!-- Mobile Menu Overlay -->
-                <div id="mobile-menu" class="fixed inset-0 glass-panel z-50 transform translate-x-full transition-transform duration-500 flex flex-col justify-center items-center md:hidden">
-                    <button id="close-mobile-menu" class="absolute top-10 right-10 text-white/30 hover:text-white transition-colors focus:outline-none">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                    <nav class="flex flex-col space-y-12 text-center text-3xl font-light tracking-[0.3em]">
-                        <a href="#" class="text-white/60 hover:text-white transition-all" onclick="closeMobileMenu(); window.cameraTo('projects'); return false;">WORKS</a>
-                        <a href="#" class="text-white/60 hover:text-white transition-all" onclick="closeMobileMenu(); window.cameraTo('skills'); return false;">SKILLS</a>
-                        <a href="#" class="text-white/60 hover:text-white transition-all" onclick="closeMobileMenu(); window.cameraTo('about'); return false;">ABOUT</a>
-                    </nav>
-                </div>
             </header>
 
-            <script>
-                const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-                const mobileMenu = document.getElementById('mobile-menu');
-                const closeMobileMenuBtn = document.getElementById('close-mobile-menu');
-                function openMobileMenu() { mobileMenu.classList.remove('translate-x-full'); }
-                function closeMobileMenu() { mobileMenu.classList.add('translate-x-full'); }
-                if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
-                if(closeMobileMenuBtn) closeMobileMenuBtn.addEventListener('click', closeMobileMenu);
-            </script>
-
-            <!-- Loading Screen -->
-            <div id="loading" class="fixed inset-0 flex items-center justify-center bg-[#05050a] z-[100] transition-opacity duration-1000 interactive-ui">
-                <div class="text-center">
-                    <div class="text-xs font-bold tracking-[0.5em] text-white/30 mb-8 uppercase animate-pulse">Establishing Connection</div>
-                    <div class="w-48 h-[1px] bg-white/10 rounded-full overflow-hidden">
-                        <div class="w-0 h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300" id="loading-bar"></div>
+            <!-- Centered Hero Content -->
+            <main class="flex-grow flex items-center justify-center pointer-events-none">
+                <div id="hero-content" class="text-center interactive-ui max-w-4xl px-6">
+                    <div class="inline-block px-4 py-1.5 glass-panel rounded-full border-purple-500/30 text-[10px] font-bold tracking-[0.4em] text-purple-400 uppercase mb-8 shadow-lg shadow-purple-500/10">
+                        Welcome to the Metaverse
+                    </div>
+                    <h1 class="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tighter leading-none">
+                        {{ $profile->hero_title ?? 'Designer' }} <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">&</span> <br>
+                        Developer
+                    </h1>
+                    <p class="text-lg md:text-xl text-white/40 max-w-2xl mx-auto font-light leading-relaxed mb-12">
+                        {{ $profile->subtitle ?? "Building high-performance digital universes with modern tech." }}
+                    </p>
+                    <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-6">
+                        <button onclick="window.cameraTo('projects')" class="w-full md:w-auto px-10 py-4 bg-white text-black text-sm font-black tracking-widest rounded-2xl hover:bg-purple-500 hover:text-white transition-all transform hover:-translate-y-2">
+                            EXPLORE GALAXY
+                        </button>
+                        <a href="#about" onclick="window.cameraTo('about'); return false;" class="w-full md:w-auto px-10 py-4 glass-panel text-white text-sm font-bold tracking-widest rounded-2xl hover:bg-white/5 transition-all">
+                            MY STORY
+                        </a>
                     </div>
                 </div>
-            </div>
+            </main>
 
-            <!-- Project Side Drawer (Modern Modal replacement) -->
-            <div id="project-modal" class="fixed right-0 top-0 h-full w-full md:w-[450px] glass-panel border-l border-white/5 p-12 transform translate-x-full transition-all duration-700 ease-in-out interactive-ui overflow-y-auto">
+            <!-- Project Side Drawer (Remains similar but themed) -->
+            <div id="project-modal" class="fixed right-0 top-0 h-full w-full md:w-[500px] glass-panel border-l border-purple-500/10 p-12 transform translate-x-full transition-all duration-700 ease-in-out interactive-ui overflow-y-auto">
                 <button id="close-modal" class="group absolute top-10 right-10 text-white/30 hover:text-white transition-colors">
                     <svg class="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -185,72 +170,72 @@
                 
                 <div id="modal-content" class="mt-8">
                     <div class="mb-10">
-                        <span id="p-tech" class="text-[10px] font-bold tracking-widest text-cyan-400 uppercase mb-2 block">Tech Stack</span>
-                        <h2 class="text-5xl font-bold text-white mb-6 leading-tight" id="p-title">Project Title</h2>
+                        <span id="p-tech" class="text-[10px] font-bold tracking-[0.3em] text-purple-400 uppercase mb-2 block">System // Tech</span>
+                        <h2 class="text-5xl font-bold text-white mb-6 tracking-tight leading-tight" id="p-title">Project</h2>
                     </div>
 
-                    <div class="relative group mb-10 overflow-hidden rounded-2xl border border-white/10">
-                        <img src="" id="p-image" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div class="relative group mb-10 overflow-hidden rounded-3xl border border-white/5 bg-black/40">
+                        <img src="" id="p-image" class="w-full h-80 object-cover transition-transform duration-1000 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                     </div>
 
-                    <p class="text-lg leading-relaxed text-gray-400 mb-12 font-light" id="p-desc">Description goes here...</p>
+                    <p class="text-xl leading-relaxed text-white/60 mb-12 font-light" id="p-desc">Description</p>
                     
                     <div class="grid grid-cols-2 gap-4">
-                        <a href="#" id="p-link" target="_blank" class="flex items-center justify-center py-4 bg-white text-black text-sm font-bold rounded-xl hover:bg-cyan-500 hover:text-white transition-all transform hover:-translate-y-1">
-                            LIVE DEMO
+                        <a href="#" id="p-link" target="_blank" class="flex items-center justify-center py-5 bg-purple-600 text-white text-xs font-black tracking-widest rounded-2xl hover:bg-purple-500 transition-all transform hover:-translate-y-1">
+                            VIEW LIVE
                         </a>
-                        <a href="#" id="p-github" target="_blank" class="flex items-center justify-center py-4 glass-panel text-white text-sm font-bold rounded-xl hover:bg-white/10 transition-all transform hover:-translate-y-1">
+                        <a href="#" id="p-github" target="_blank" class="flex items-center justify-center py-5 glass-panel text-white text-xs font-black tracking-widest rounded-2xl hover:bg-white/10 transition-all transform hover:-translate-y-1">
                             SOURCE
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Enhanced About Section -->
+            <!-- Enhanced About Section (Appears at end of scroll) -->
             <div id="about-section" class="absolute inset-0 flex items-center justify-center p-8 transition-all duration-1000 opacity-0 pointer-events-none z-0 interactive-ui">
-                <div class="max-w-xl glass-panel p-12 rounded-[32px] border border-white/5 text-center transform scale-95 transition-transform duration-1000">
+                <div class="max-w-2xl glass-panel p-16 rounded-[48px] border border-purple-500/10 text-center transform scale-95 transition-transform duration-1000">
                     <div class="relative inline-block mb-10">
-                        <div class="absolute inset-[-10px] bg-cyan-500/20 blur-2xl rounded-full"></div>
-                        <img src="{{ $profile->profile_image ? asset('storage/' . $profile->profile_image) : 'https://ui-avatars.com/api/?name=' . urlencode($profile->hero_title) . '&background=06b6d4&color=fff' }}" 
-                             class="w-32 h-32 rounded-3xl relative z-10 border border-white/10 shadow-2xl object-cover hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-[-20px] bg-purple-500/30 blur-3xl rounded-full animate-pulse"></div>
+                        <img src="{{ $profile->profile_image ? asset('storage/' . $profile->profile_image) : 'https://ui-avatars.com/api/?name=' . urlencode($profile->hero_title) . '&background=7c3aed&color=fff' }}" 
+                             class="w-40 h-40 rounded-[40px] relative z-10 border border-white/10 shadow-2xl object-cover hover:rotate-3 transition-transform duration-500">
                     </div>
                     
-                    <h2 class="text-4xl font-bold mb-3 tracking-tight">{{ $profile->hero_title }}</h2>
-                    <h3 class="text-lg text-cyan-400/80 font-medium tracking-widest uppercase mb-8">{{ $profile->subtitle }}</h3>
+                    <h2 class="text-5xl font-bold mb-4 tracking-tight">{{ $profile->hero_title }}</h2>
+                    <h3 class="text-lg text-purple-400 font-bold tracking-[0.4em] uppercase mb-10">{{ $profile->subtitle }}</h3>
                     
-                    <p class="text-gray-400 leading-relaxed mb-12 font-light text-lg">
-                        {{ $profile->about_text ?? "Full-stack developer focused on creating cinematic digital experiences." }}
+                    <p class="text-white/50 leading-relaxed mb-14 font-light text-xl">
+                        {{ $profile->about_text ?? "Creating cinematic web experiences." }}
                     </p>
 
                     <div class="flex justify-center space-x-12">
                         @if($profile->resume_url)
-                            <a href="{{ $profile->resume_url }}" target="_blank" class="text-xs font-bold tracking-widest text-white/40 hover:text-cyan-400 transition-colors">CV</a>
+                            <a href="{{ $profile->resume_url }}" target="_blank" class="text-[10px] font-black tracking-[0.4em] text-white/30 hover:text-purple-400 transition-colors uppercase">Resume</a>
                         @endif
                         @if(isset($profile->social_links['github']))
-                            <a href="{{ $profile->social_links['github'] }}" target="_blank" class="text-xs font-bold tracking-widest text-white/40 hover:text-cyan-400 transition-colors">GH</a>
+                            <a href="{{ $profile->social_links['github'] }}" target="_blank" class="text-[10px] font-black tracking-[0.4em] text-white/30 hover:text-purple-400 transition-colors uppercase">GitHub</a>
                         @endif
                         @if(isset($profile->social_links['linkedin']))
-                            <a href="{{ $profile->social_links['linkedin'] }}" target="_blank" class="text-xs font-bold tracking-widest text-white/40 hover:text-cyan-400 transition-colors">LI</a>
+                            <a href="{{ $profile->social_links['linkedin'] }}" target="_blank" class="text-[10px] font-black tracking-[0.4em] text-white/30 hover:text-purple-400 transition-colors uppercase">LinkedIn</a>
                         @endif
                     </div>
                 </div>
             </div>
 
-            <!-- Footer / Status -->
-            <footer class="mt-auto flex justify-between items-end interactive-ui p-2 animate-fade-in translate-y-[10px] opacity-0" style="animation: fadeIn 0.8s ease-out 1s forwards">
-                <div class="space-y-1">
-                    <p class="text-[10px] font-bold tracking-[0.3em] text-white/20 uppercase">Navigation Protocol</p>
-                    <p class="text-[10px] font-medium text-white/40">SCROLL TO ORBIT • CLICK TO DRIFT</p>
+            <!-- Enhanced Footer -->
+            <footer class="mt-auto flex justify-between items-end interactive-ui p-6 md:p-10">
+                <div class="space-y-2 opacity-30">
+                    <p class="text-[8px] font-bold tracking-[0.5em] text-white uppercase">System Status</p>
+                    <p class="text-[8px] font-medium text-white tracking-[0.2em]">ORBITAL VELOCITY: 17,500 MPH</p>
                 </div>
                 
-                <div class="flex items-center space-x-6">
-                    <div class="text-right">
-                        <p class="text-[10px] font-bold tracking-[0.3em] text-white/20 uppercase">Location</p>
-                        <p class="text-[10px] font-medium text-white/40">DEEP SPACE HUB-01</p>
+                <div class="flex items-center space-x-8">
+                    <div class="text-right opacity-30 hidden md:block">
+                        <p class="text-[8px] font-bold tracking-[0.5em] text-white uppercase">Coordinate Info</p>
+                        <p class="text-[8px] font-medium text-white tracking-[0.2em]">RA 18H 36M 56S | DEC +38° 47′ 1″</p>
                     </div>
-                    <div class="w-[1px] h-8 bg-white/5"></div>
-                    <div class="text-[10px] font-bold text-cyan-500/50">V.2.0.4</div>
+                    <div class="w-[1px] h-10 bg-white/10"></div>
+                    <div class="text-[10px] font-black text-purple-500/50 tracking-tighter italic">V.GALAXY-3D</div>
                 </div>
             </footer>
 

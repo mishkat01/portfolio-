@@ -79,9 +79,9 @@ class ProjectController extends Controller
 
         if ($request->hasFile('thumbnail_url')) {
             // Delete old image if it was a file
-            if ($project->thumbnail_url && !\Str::startsWith($project->thumbnail_url, ['http://', 'https://'])) {
-                if (\Storage::disk('public')->exists($project->thumbnail_url)) {
-                    \Storage::disk('public')->delete($project->thumbnail_url);
+            if ($project->thumbnail_url && !Str::startsWith($project->thumbnail_url, ['http://', 'https://'])) {
+                if (Storage::disk('public')->exists($project->thumbnail_url)) {
+                    Storage::disk('public')->delete($project->thumbnail_url);
                 }
             }
 
@@ -111,9 +111,9 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         // Delete thumbnail if it's a stored file
-        if ($project->thumbnail_url && !\Str::startsWith($project->thumbnail_url, ['http://', 'https://'])) {
-            if (\Storage::disk('public')->exists($project->thumbnail_url)) {
-                \Storage::disk('public')->delete($project->thumbnail_url);
+        if ($project->thumbnail_url && !Str::startsWith($project->thumbnail_url, ['http://', 'https://'])) {
+            if (Storage::disk('public')->exists($project->thumbnail_url)) {
+                Storage::disk('public')->delete($project->thumbnail_url);
             }
         }
 
